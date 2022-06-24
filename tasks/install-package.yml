@@ -1,0 +1,42 @@
+---
+
+- block:
+
+    - name: Get repo file
+      get_url:
+        url: https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
+        dest: /etc/yum.repos.d/hashicorp.repo
+        mode: '0644'
+
+  when: ansible_distribution == 'Fedora'
+
+
+- block:
+
+    - name: Get repo file
+      get_url:
+        url: https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+        dest: /etc/yum.repos.d/hashicorp.repo
+        mode: '0644'
+
+  when: ansible_os_family == 'RedHat' and ansible_distribution != 'Fedora'
+
+
+- block:
+
+    - name: Import the hashicorp GPG key
+      apt_key:
+        state: present
+        url: https://apt.releases.hashicorp.com/gpg
+
+    - name: Configure the APT repository
+      apt_repository:
+        repo: "deb [arch=amd64] https://apt.releases.hashicorp.com {{ ansible_lsb.codename }} main"
+        state: present
+
+  when: ansible_os_family == 'Debian'
+
+- name: Install the package
+  package:
+    name: "{{ hashicorp_product }}"
+    state: present

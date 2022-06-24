@@ -1,0 +1,21 @@
+---
+
+# product name
+hashicorp_product: "{{ role_name }}"
+
+# product platform
+hashicorp_platform: "{{ ansible_system | lower }}"
+
+# product architecture
+hashicorp_arch: "{{ 'amd64' if ansible_architecture == 'x86_64' else ansible_architecture }}"
+
+# product install mode (binary or package)
+hashicorp_install_mode: package
+
+# product zip filename
+hashicorp_zip: >-
+  {{ hashicorp_product }}_{{ hashicorp_product_version }}_{{ hashicorp_platform }}_{{ hashicorp_arch}}.zip
+
+# product download url
+hashicorp_product_url: >-
+  https://releases.hashicorp.com/{{ hashicorp_product }}/{{ hashicorp_product_version }}/{{ hashicorp_zip }}
