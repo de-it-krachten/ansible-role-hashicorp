@@ -1,0 +1,45 @@
+---
+
+- name: Use specific {{ hashicorp_product }} version
+  set_fact:
+    hashicorp_product_version: "{{ vars[hashicorp_product+'_version'] }}"
+  when: vars[hashicorp_product+'_version'] is defined
+
+- block:
+
+    - name: Get latest release of a public repository
+      uri:
+        url: https://api.github.com/repos/hashicorp/{{ hashicorp_product }}/releases/latest
+      check_mode: no
+      register: hashicorp_product_release_latest
+      when: hashicorp_product in [ 'vault' ]
+
+    - name: Register the version only
+      set_fact:
+        hashicorp_product_version: "{{ hashicorp_product_release_latest['json']['name'] | regex_replace('^v') }}"
+      when: hashicorp_product in [ 'vault' ]
+
+    - name: Get latest release of a public repository
+      uri:
+        url: https://checkpoint-api.hashicorp.com/v1/check/{{ hashicorp_product }}
+      check_mode: no
+      register: hashicorp_product_release_latest
+      when: hashicorp_product not in [ 'vault' ]
+
+    - name: Register the version only
+      set_fact:
+        hashicorp_product_version: "{{ hashicorp_product_release_latest['json']['current_version'] | regex_replace('^v') }}"
+      when: hashicorp_product not in [ 'vault' ]
+
+  when: vars[hashicorp_product+'_version'] is not defined
+
+- name: Install packages required to unpack
+  package:
+    name: unzip
+    state: present
+
+- name: Download and unpack binary
+  unarchive:
+    src: "{{ hashicorp_product_url }}"
+    dest: /usr/local/bin
+    remote_src: yes
