@@ -7,20 +7,10 @@ generic:
   role_description: |
     Install hashicorp products 
 
-github:
-  fail_fast: false
-
-platforms_add:
-  - name: Fedora 36
-    image: fefdora36
-
 molecule:
   converge:
     vars:
       hashicorp_product: vagrant
-  platforms_add:
-    - name: fedora36
-      image: "geerlingguy/docker-fedora36-ansible:latest"
 
 ci_templates:
   converge.yml:
