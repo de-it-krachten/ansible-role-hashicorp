@@ -5,7 +5,8 @@
     hashicorp_product_version: "{{ vars[hashicorp_product+'_version'] }}"
   when: vars[hashicorp_product+'_version'] is defined
 
-- block:
+- name: Get version
+  block:
 
     - name: Get latest release of a public repository
       uri:

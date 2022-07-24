@@ -1,39 +1,29 @@
 ---
 
-- block:
-
-    - name: Get repo file
-      get_url:
-        url: https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
-        dest: /etc/yum.repos.d/hashicorp.repo
-        mode: '0644'
-
+- name: Get repo file (Fedora)
+  get_url:
+    url: https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
+    dest: /etc/yum.repos.d/hashicorp.repo
+    mode: '0644'
   when: ansible_distribution == 'Fedora'
 
-
-- block:
-
-    - name: Get repo file
-      get_url:
-        url: https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
-        dest: /etc/yum.repos.d/hashicorp.repo
-        mode: '0644'
-
+- name: Get repo file (RedHat family)
+  get_url:
+    url: https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+    dest: /etc/yum.repos.d/hashicorp.repo
+    mode: '0644'
   when: ansible_os_family == 'RedHat' and ansible_distribution != 'Fedora'
 
+- name: Import the hashicorp GPG key (Debian family)
+  apt_key:
+    state: present
+    url: https://apt.releases.hashicorp.com/gpg
+  when: ansible_os_family == 'Debian'
 
-- block:
-
-    - name: Import the hashicorp GPG key
-      apt_key:
-        state: present
-        url: https://apt.releases.hashicorp.com/gpg
-
-    - name: Configure the APT repository
-      apt_repository:
-        repo: "deb [arch=amd64] https://apt.releases.hashicorp.com {{ ansible_lsb.codename }} main"
-        state: present
-
+- name: Configure the APT repository (Debian family)
+  apt_repository:
+    repo: "deb [arch=amd64] https://apt.releases.hashicorp.com {{ ansible_lsb.codename }} main"
+    state: present
   when: ansible_os_family == 'Debian'
 
 - name: Install the package
