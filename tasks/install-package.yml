@@ -1,32 +1,32 @@
 ---
 
 - name: Get repo file (Fedora)
-  get_url:
+  ansible.builtin.get_url:
     url: https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
     dest: /etc/yum.repos.d/hashicorp.repo
     mode: '0644'
   when: ansible_distribution == 'Fedora'
 
 - name: Get repo file (RedHat family)
-  get_url:
+  ansible.builtin.get_url:
     url: https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
     dest: /etc/yum.repos.d/hashicorp.repo
     mode: '0644'
   when: ansible_os_family == 'RedHat' and ansible_distribution != 'Fedora'
 
 - name: Import the hashicorp GPG key (Debian family)
-  apt_key:
+  ansible.builtin.apt_key:
     state: present
     url: https://apt.releases.hashicorp.com/gpg
   when: ansible_os_family == 'Debian'
 
 - name: Configure the APT repository (Debian family)
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: "deb [arch=amd64] https://apt.releases.hashicorp.com {{ ansible_lsb.codename }} main"
     state: present
   when: ansible_os_family == 'Debian'
 
 - name: Install the package
-  package:
+  ansible.builtin.package:
     name: "{{ hashicorp_product }}"
     state: present
