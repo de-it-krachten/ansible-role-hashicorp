@@ -6,6 +6,15 @@
 Install hashicorp products 
 
 
+
+## Dependencies
+
+#### Roles
+None
+
+#### Collections
+- community.general
+
 ## Platforms
 
 Supported platforms
@@ -47,12 +56,13 @@ hashicorp_install_mode: package
 
 # product zip filename
 hashicorp_zip: >-
-  {{ hashicorp_product }}_{{ hashicorp_product_version }}_{{ hashicorp_platform }}_{{ hashicorp_arch}}.zip
+  {{ hashicorp_product }}_{{ hashicorp_product_version }}_{{ hashicorp_platform }}_{{ hashicorp_arch }}.zip
 
 # product download url
 hashicorp_product_url: >-
   https://releases.hashicorp.com/{{ hashicorp_product }}/{{ hashicorp_product_version }}/{{ hashicorp_zip }}
 </pre></code>
+
 
 
 
