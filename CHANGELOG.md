@@ -1,3 +1,11 @@
+# [1.2.0](https://github.com/de-it-krachten/ansible-role-hashicorp/compare/v1.1.0...v1.2.0) (2022-10-12)
+
+
+### Features
+
+* Move to FQCN ([c22809d](https://github.com/de-it-krachten/ansible-role-hashicorp/commit/c22809d2f4ead69a9dc412699e7a4d3057e804e5))
+* Update CI to latest standards ([ec54b70](https://github.com/de-it-krachten/ansible-role-hashicorp/commit/ec54b70422b84e8b833c14ec3fb712b4a268d82c))
+
 # [1.1.0](https://github.com/de-it-krachten/ansible-role-hashicorp/compare/v1.0.0...v1.1.0) (2022-07-28)
 
 
