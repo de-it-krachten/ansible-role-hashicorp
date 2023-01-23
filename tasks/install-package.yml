@@ -1,30 +1,48 @@
 ---
 
-- name: Get repo file (Fedora)
-  ansible.builtin.get_url:
-    url: https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
-    dest: /etc/yum.repos.d/hashicorp.repo
-    mode: '0644'
-  when: ansible_distribution == 'Fedora'
+- name: RedHat family
+  when: ansible_os_family == 'RedHat'
+  block:
 
-- name: Get repo file (RedHat family)
-  ansible.builtin.get_url:
-    url: https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
-    dest: /etc/yum.repos.d/hashicorp.repo
-    mode: '0644'
-  when: ansible_os_family == 'RedHat' and ansible_distribution != 'Fedora'
+    - name: Import the hashicorp GPG key (RPM)
+      ansible.builtin.rpm_key:
+        key: https://rpm.releases.hashicorp.com/gpg
+        state: present
 
-- name: Import the hashicorp GPG key (Debian family)
-  ansible.builtin.apt_key:
-    state: present
-    url: https://apt.releases.hashicorp.com/gpg
+    - name: Get YUM repository definition (Fedora)
+      ansible.builtin.get_url:
+        url: https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
+        dest: /etc/yum.repos.d/hashicorp.repo
+        mode: '0644'
+      when: ansible_distribution == 'Fedora'
+
+    - name: Get YUM repository definition (!Fedora)
+      ansible.builtin.get_url:
+        url: https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+        dest: /etc/yum.repos.d/hashicorp.repo
+        mode: '0644'
+      when: ansible_distribution != 'Fedora'
+
+- name: Debian family
   when: ansible_os_family == 'Debian'
+  block:
 
-- name: Configure the APT repository (Debian family)
-  ansible.builtin.apt_repository:
-    repo: "deb [arch=amd64] https://apt.releases.hashicorp.com {{ ansible_lsb.codename }} main"
-    state: present
-  when: ansible_os_family == 'Debian'
+    - name: Import the hashicorp GPG key (APT)
+      ansible.builtin.apt_key:
+        state: present
+        url: https://apt.releases.hashicorp.com/gpg
+
+    - name: Configure the APT repository
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64] https://apt.releases.hashicorp.com {{ ansible_lsb.codename }} main"
+        state: present
+        filename: hashicorp
+      register: __apt_repository
+
+    - name: Update APT package list
+      ansible.builtin.apt:
+        update_cache: yes
+      when: __apt_repository.changed
 
 - name: Install the package
   ansible.builtin.package:
