@@ -39,7 +39,7 @@
         filename: hashicorp
       register: __apt_repository
 
-    - name: Update APT package list
+    - name: Update APT package list  # noqa no-handler
       ansible.builtin.apt:
         update_cache: yes
       when: __apt_repository.changed
