@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/de-it-krachten/ansible-role-hashicorp/compare/v1.2.0...v1.2.1) (2023-05-06)
+
+
+### Bug Fixes
+
+* fix repository setup ([d28d6fe](https://github.com/de-it-krachten/ansible-role-hashicorp/commit/d28d6fe2433fc4470b9963f55b07c08b13ff958f))
+
 # [1.2.0](https://github.com/de-it-krachten/ansible-role-hashicorp/compare/v1.1.0...v1.2.0) (2022-10-12)
 
 
