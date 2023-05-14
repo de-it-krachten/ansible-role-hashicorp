@@ -27,10 +27,48 @@
   when: ansible_os_family == 'Debian'
   block:
 
-    - name: Import the hashicorp GPG key (APT)
-      ansible.builtin.apt_key:
-        state: present
+    - name: Download APT signing key
+      ansible.builtin.get_url:
         url: https://apt.releases.hashicorp.com/gpg
+        dest: /tmp/hashicorp.gpg
+        validate_certs: false
+        mode: "0644"
+      environment:
+        https_proxy: "{{ https_proxy | default('') }}"
+        http_proxy: "{{ http_proxy | default('') }}"
+      check_mode: no
+
+    - name: Retrieve fingerprint from key
+      ansible.builtin.shell: |
+        set -o pipefail
+        gpg --with-colons /tmp/hashicorp.gpg | \
+        awk -F: '/^pub:/ {print $5}'
+      args:
+        executable: /bin/bash
+      changed_when: false
+      check_mode: no
+      register: __gpg_fpr
+
+    - name: Show fingerprint of the key
+      ansible.builtin.debug:
+        msg: "Key {{ __gpg_fpr.stdout }}"
+        verbosity: 1
+
+    - name: Delete APT signing key from legacy location
+      ansible.builtin.apt_key:
+        id: "0x{{ __gpg_fpr.stdout }}"
+        state: absent
+        keyring: /etc/apt/trusted.gpg
+
+    - name: Import APT signing key into the proper drop-in directory
+      ansible.builtin.apt_key:
+        file: /tmp/hashicorp.gpg
+        state: present
+        keyring: /etc/apt/trusted.gpg.d/hashicorp.gpg
+
+    - name: Delete obsolete repository file
+      ansible.builtin.file:
+        path: /etc/apt/sources.list.d/apt_releases_hashicorp_com.list
 
     - name: Configure the APT repository
       ansible.builtin.apt_repository:
@@ -43,6 +81,7 @@
       ansible.builtin.apt:
         update_cache: yes
       when: __apt_repository.changed
+
 
 - name: Install the package
   ansible.builtin.package:
