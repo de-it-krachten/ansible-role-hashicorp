@@ -44,7 +44,7 @@ Note:
 ### defaults/main.yml
 <pre><code>
 # product name
-hashicorp_product: "{{ role_name }}"
+hashicorp_product: "{{ role_name | regex_replace('deitkrachten\\.') }}"
 
 # product platform
 hashicorp_platform: "{{ ansible_system | lower }}"

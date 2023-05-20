@@ -69,6 +69,7 @@
     - name: Delete obsolete repository file
       ansible.builtin.file:
         path: /etc/apt/sources.list.d/apt_releases_hashicorp_com.list
+        state: absent
 
     - name: Configure the APT repository
       ansible.builtin.apt_repository:
