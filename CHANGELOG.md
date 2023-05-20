@@ -1,3 +1,11 @@
+## [1.2.2](https://github.com/de-it-krachten/ansible-role-hashicorp/compare/v1.2.1...v1.2.2) (2023-05-20)
+
+
+### Bug Fixes
+
+* Add missing state=absemt for obsolete APT repo file ([2f35fb8](https://github.com/de-it-krachten/ansible-role-hashicorp/commit/2f35fb8ff4ddc0edbd58770a6b9860b8fd7842de))
+* Hashicorp GPG key is moved due to deprecation warning ([c82a683](https://github.com/de-it-krachten/ansible-role-hashicorp/commit/c82a683f0fe11ca55ca557146db61d1212971dee))
+
 ## [1.2.1](https://github.com/de-it-krachten/ansible-role-hashicorp/compare/v1.2.0...v1.2.1) (2023-05-06)
 
 
