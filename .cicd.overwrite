@@ -7,6 +7,14 @@ generic:
   role_description: |
     Install hashicorp products 
 
+platforms:
+  opensuse15:
+    ci: false
+    supported: false
+  sles15:
+    ci: false
+    supported: false
+
 molecule:
   converge:
     vars:
