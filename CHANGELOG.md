@@ -1,3 +1,15 @@
+# [1.3.0](https://github.com/de-it-krachten/ansible-role-hashicorp/compare/v1.2.2...v1.3.0) (2023-09-08)
+
+
+### Bug Fixes
+
+* Remove initial support for SLES/OpenSUSE ([53d6f31](https://github.com/de-it-krachten/ansible-role-hashicorp/commit/53d6f31eee7bc66c9e3cb1f03c67addd6be14d3a))
+
+
+### Features
+
+* Update supported platforms & CI ([9d6197a](https://github.com/de-it-krachten/ansible-role-hashicorp/commit/9d6197adb50d66506c21df4ebc2660cfc99c6ab4))
+
 ## [1.2.2](https://github.com/de-it-krachten/ansible-role-hashicorp/compare/v1.2.1...v1.2.2) (2023-05-20)
 
 
