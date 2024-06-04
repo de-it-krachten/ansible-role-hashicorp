@@ -13,7 +13,7 @@ Install hashicorp products
 None
 
 #### Collections
-- community.general
+None
 
 ## Platforms
 
@@ -29,13 +29,13 @@ Supported platforms
 - OracleLinux 9
 - AlmaLinux 8
 - AlmaLinux 9
-- Debian 10 (Buster)<sup>1</sup>
 - Debian 11 (Bullseye)
 - Debian 12 (Bookworm)
 - Ubuntu 20.04 LTS
 - Ubuntu 22.04 LTS
-- Fedora 37
-- Fedora 38
+- Ubuntu 24.04 LTS
+- Fedora 39
+- Fedora 40
 
 Note:
 <sup>1</sup> : no automated testing is performed on these platforms
@@ -77,7 +77,7 @@ hashicorp_product_url: >-
       include_role:
         name: hashicorp
       vars:
-        hashicorp_product: "{{ item }}"
+        hashicorp_product: '{{ item }}'
       loop:
         - terraform
         - vagrant
@@ -86,12 +86,11 @@ hashicorp_product_url: >-
         - consul
         - vault
         - nomad
-
     - name: Include role 'hashicorp' (binary)
       include_role:
         name: hashicorp
       vars:
-        hashicorp_product: "{{ item }}"
+        hashicorp_product: '{{ item }}'
         hashicorp_install_mode: binary
       loop:
         - terraform

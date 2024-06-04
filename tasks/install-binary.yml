@@ -38,8 +38,29 @@
     name: unzip
     state: present
 
+- name: Create temporary directory
+  ansible.builtin.tempfile:
+    state: directory
+  changed_when: false
+  register: __tmpdir
+
 - name: Download and unpack binary
   ansible.builtin.unarchive:
     src: "{{ hashicorp_product_url }}"
-    dest: /usr/local/bin
+    dest: "{{ __tmpdir.path }}"
     remote_src: yes
+  changed_when: false
+
+- name: Copy binary to final location
+  ansible.builtin.copy:
+    src: "{{ __tmpdir.path }}/{{ hashicorp_product }}"
+    dest: /usr/local/bin/{{ hashicorp_product }}
+    mode: "0755"
+    remote_src: yes
+
+- name: Delete temporary directory
+  ansible.builtin.file:
+    path: "{{ __tmpdir.path }}"
+    state: absent
+  changed_when: false
+
