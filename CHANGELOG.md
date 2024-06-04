@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/de-it-krachten/ansible-role-hashicorp/compare/v1.3.0...v1.4.0) (2024-06-04)
+
+
+### Features
+
+* Add support for Ubuntu 24.04 LTS + Fedora 40 ([d929569](https://github.com/de-it-krachten/ansible-role-hashicorp/commit/d9295692155ba193295500b083304cb623b67370))
+
 # [1.3.0](https://github.com/de-it-krachten/ansible-role-hashicorp/compare/v1.2.2...v1.3.0) (2023-09-08)
 
 
