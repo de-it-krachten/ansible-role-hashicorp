@@ -57,54 +57,15 @@
 
     - name: Setup Microsoft APT repository  # noqa jinja[spacing]
       ansible.builtin.apt_repository:
-        filename: microsoft
+        filename: hasicorp
         repo: >-
           {%- if ansible_distribution_major_version | int < 12 -%}
-          deb [arch=amd64,arm64] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main"
+          deb [arch=amd64,arm64] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main
           {%- else -%}
           deb [arch=amd64,arm64 signed-by=/etc/apt/trusted.gpg.d/hashicorp.gpg] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main
           {%- endif -%}
         state: present
       become: yes
-
-- name: Debian family
-  when: ansible_os_family == 'Debian'
-  block:
-
-    - name: Download APT signing key
-      ansible.builtin.get_url:
-        url: https://apt.releases.hashicorp.com/gpg
-        dest: /tmp/hashicorp.gpg
-        validate_certs: false
-        mode: "0644"
-      environment:
-        https_proxy: "{{ https_proxy | default('') }}"
-        http_proxy: "{{ http_proxy | default('') }}"
-      check_mode: no
-
-    - name: Retrieve fingerprint from key
-      ansible.builtin.shell: |
-        set -o pipefail
-        gpg --with-colons /tmp/hashicorp.gpg | \
-        awk -F: '/^pub:/ {print $5}'
-      args:
-        executable: /bin/bash
-      changed_when: false
-      check_mode: no
-      register: __gpg_fpr
-
-    - name: Configure the APT repository
-      ansible.builtin.apt_repository:
-        repo: "deb [arch=amd64] https://apt.releases.hashicorp.com {{ ansible_lsb.codename }} main"
-        state: present
-        filename: hashicorp
-      register: __apt_repository
-
-    - name: Update APT package list  # noqa no-handler
-      ansible.builtin.apt:
-        update_cache: yes
-      when: __apt_repository.changed
-
 
 - name: Install the package
   ansible.builtin.package:
