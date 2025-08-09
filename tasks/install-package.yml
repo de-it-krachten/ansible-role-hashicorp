@@ -23,6 +23,50 @@
         mode: '0644'
       when: ansible_distribution != 'Fedora'
 
+
+- name: Debian family
+  when: ansible_os_family == 'Debian'
+  block:
+
+    - name: Download APT signing key
+      ansible.builtin.get_url:
+        url: https://apt.releases.hashicorp.com/gpg
+        dest: /tmp/hashicorp.asc
+        mode: "0644"
+
+    - name: Convert APT key into binary format
+      ansible.builtin.command:
+        cmd: gpg --batch --yes --no-tty --dearmor -o /tmp/hashicorp.gpg /tmp/hashicorp.asc
+      changed_when: false
+
+    - name: Import Microsoft GPG key
+      ansible.builtin.apt_key:
+        state: present
+        file: /tmp/hashicorp.gpg
+        keyring: /etc/apt/trusted.gpg.d/hashicorp.gpg
+      become: yes
+      when: ansible_distribution_major_version | int < 12
+
+    - name: Copy APT signing key into the proper drop-in directory
+      ansible.builtin.copy:
+        src: /tmp/hashicorp.gpg
+        dest: /etc/apt/trusted.gpg.d/hashicorp.gpg
+        remote_src: yes
+        mode: "0644"
+      when: ansible_distribution_major_version | int >= 12
+
+    - name: Setup Microsoft APT repository  # noqa jinja[spacing]
+      ansible.builtin.apt_repository:
+        filename: microsoft
+        repo: >-
+          {%- if ansible_distribution_major_version | int < 12 -%}
+          deb [arch=amd64,arm64] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main"
+          {%- else -%}
+          deb [arch=amd64,arm64 signed-by=/etc/apt/trusted.gpg.d/hashicorp.gpg] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main
+          {%- endif -%}
+        state: present
+      become: yes
+
 - name: Debian family
   when: ansible_os_family == 'Debian'
   block:
@@ -48,28 +92,6 @@
       changed_when: false
       check_mode: no
       register: __gpg_fpr
-
-    - name: Show fingerprint of the key
-      ansible.builtin.debug:
-        msg: "Key {{ __gpg_fpr.stdout }}"
-        verbosity: 1
-
-    - name: Delete APT signing key from legacy location
-      ansible.builtin.apt_key:
-        id: "0x{{ __gpg_fpr.stdout }}"
-        state: absent
-        keyring: /etc/apt/trusted.gpg
-
-    - name: Import APT signing key into the proper drop-in directory
-      ansible.builtin.apt_key:
-        file: /tmp/hashicorp.gpg
-        state: present
-        keyring: /etc/apt/trusted.gpg.d/hashicorp.gpg
-
-    - name: Delete obsolete repository file
-      ansible.builtin.file:
-        path: /etc/apt/sources.list.d/apt_releases_hashicorp_com.list
-        state: absent
 
     - name: Configure the APT repository
       ansible.builtin.apt_repository:

@@ -26,6 +26,9 @@ platforms:
   sles15:
     ci: false
     supported: false
+  debian13:
+    ci: false
+    supported: false
 
 molecule:
   converge:
