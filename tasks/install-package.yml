@@ -23,6 +23,7 @@
         mode: '0644'
       when: ansible_distribution != 'Fedora'
 
+
 - name: Debian family
   when: ansible_os_family == 'Debian'
   block:
@@ -30,59 +31,41 @@
     - name: Download APT signing key
       ansible.builtin.get_url:
         url: https://apt.releases.hashicorp.com/gpg
-        dest: /tmp/hashicorp.gpg
-        validate_certs: false
+        dest: /tmp/hashicorp.asc
         mode: "0644"
-      environment:
-        https_proxy: "{{ https_proxy | default('') }}"
-        http_proxy: "{{ http_proxy | default('') }}"
-      check_mode: no
 
-    - name: Retrieve fingerprint from key
-      ansible.builtin.shell: |
-        set -o pipefail
-        gpg --with-colons /tmp/hashicorp.gpg | \
-        awk -F: '/^pub:/ {print $5}'
-      args:
-        executable: /bin/bash
+    - name: Convert APT key into binary format
+      ansible.builtin.command:
+        cmd: gpg --batch --yes --no-tty --dearmor -o /tmp/hashicorp.gpg /tmp/hashicorp.asc
       changed_when: false
-      check_mode: no
-      register: __gpg_fpr
 
-    - name: Show fingerprint of the key
-      ansible.builtin.debug:
-        msg: "Key {{ __gpg_fpr.stdout }}"
-        verbosity: 1
-
-    - name: Delete APT signing key from legacy location
+    - name: Import Microsoft GPG key
       ansible.builtin.apt_key:
-        id: "0x{{ __gpg_fpr.stdout }}"
-        state: absent
-        keyring: /etc/apt/trusted.gpg
-
-    - name: Import APT signing key into the proper drop-in directory
-      ansible.builtin.apt_key:
+        state: present
         file: /tmp/hashicorp.gpg
-        state: present
         keyring: /etc/apt/trusted.gpg.d/hashicorp.gpg
+      become: yes
+      when: ansible_distribution_major_version | int < 12
 
-    - name: Delete obsolete repository file
-      ansible.builtin.file:
-        path: /etc/apt/sources.list.d/apt_releases_hashicorp_com.list
-        state: absent
+    - name: Copy APT signing key into the proper drop-in directory
+      ansible.builtin.copy:
+        src: /tmp/hashicorp.gpg
+        dest: /etc/apt/trusted.gpg.d/hashicorp.gpg
+        remote_src: yes
+        mode: "0644"
+      when: ansible_distribution_major_version | int >= 12
 
-    - name: Configure the APT repository
+    - name: Setup Microsoft APT repository  # noqa jinja[spacing]
       ansible.builtin.apt_repository:
-        repo: "deb [arch=amd64] https://apt.releases.hashicorp.com {{ ansible_lsb.codename }} main"
+        filename: hasicorp
+        repo: >-
+          {%- if ansible_distribution_major_version | int < 12 -%}
+          deb [arch=amd64,arm64] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main
+          {%- else -%}
+          deb [arch=amd64,arm64 signed-by=/etc/apt/trusted.gpg.d/hashicorp.gpg] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main
+          {%- endif -%}
         state: present
-        filename: hashicorp
-      register: __apt_repository
-
-    - name: Update APT package list  # noqa no-handler
-      ansible.builtin.apt:
-        update_cache: yes
-      when: __apt_repository.changed
-
+      become: yes
 
 - name: Install the package
   ansible.builtin.package:
