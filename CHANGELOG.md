@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/de-it-krachten/ansible-role-hashicorp/compare/v1.4.0...v1.5.0) (2025-08-11)
+
+
+### Features
+
+* Update supported platforms & CI ([7949a3c](https://github.com/de-it-krachten/ansible-role-hashicorp/commit/7949a3ced92d38e769626d403a521e57517fadf0))
+
 # [1.4.0](https://github.com/de-it-krachten/ansible-role-hashicorp/compare/v1.3.0...v1.4.0) (2024-06-04)
 
 
