@@ -1,3 +1,11 @@
+# [1.6.0](https://github.com/de-it-krachten/ansible-role-hashicorp/compare/v1.5.0...v1.6.0) (2026-03-15)
+
+
+### Features
+
+* Added support for Fedora 43 ([21cec35](https://github.com/de-it-krachten/ansible-role-hashicorp/commit/21cec353165ba2e67a55261735a486d93fa3826e))
+* Drop support for Fedora 41 ([fccac11](https://github.com/de-it-krachten/ansible-role-hashicorp/commit/fccac11ca961664699b4a3cbb01096876a4bb7c8))
+
 # [1.5.0](https://github.com/de-it-krachten/ansible-role-hashicorp/compare/v1.4.0...v1.5.0) (2025-08-11)
 
 
