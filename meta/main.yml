@@ -22,5 +22,6 @@ galaxy_info:
         - jammy
     - name: Fedora
       versions:
-        - all
+        - '42'
+        - '43'
 dependencies: []
