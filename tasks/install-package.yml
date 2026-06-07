@@ -1,7 +1,7 @@
 ---
 
 - name: RedHat family
-  when: ansible_os_family == 'RedHat'
+  when: ansible_facts.os_family == 'RedHat'
   block:
 
     - name: Import the hashicorp GPG key (RPM)
@@ -14,18 +14,18 @@
         url: https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
         dest: /etc/yum.repos.d/hashicorp.repo
         mode: '0644'
-      when: ansible_distribution == 'Fedora'
+      when: ansible_facts.distribution == 'Fedora'
 
     - name: Get YUM repository definition (!Fedora)
       ansible.builtin.get_url:
         url: https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
         dest: /etc/yum.repos.d/hashicorp.repo
         mode: '0644'
-      when: ansible_distribution != 'Fedora'
+      when: ansible_facts.distribution != 'Fedora'
 
 
 - name: Debian family
-  when: ansible_os_family == 'Debian'
+  when: ansible_facts.os_family == 'Debian'
   block:
 
     - name: Download APT signing key
@@ -45,7 +45,7 @@
         file: /tmp/hashicorp.gpg
         keyring: /etc/apt/trusted.gpg.d/hashicorp.gpg
       become: yes
-      when: ansible_distribution_major_version | int < 12
+      when: ansible_facts.distribution_major_version | int < 12
 
     - name: Copy APT signing key into the proper drop-in directory
       ansible.builtin.copy:
@@ -53,16 +53,16 @@
         dest: /etc/apt/trusted.gpg.d/hashicorp.gpg
         remote_src: yes
         mode: "0644"
-      when: ansible_distribution_major_version | int >= 12
+      when: ansible_facts.distribution_major_version | int >= 12
 
     - name: Setup Microsoft APT repository  # noqa jinja[spacing]
       ansible.builtin.apt_repository:
         filename: hasicorp
         repo: >-
-          {%- if ansible_distribution_major_version | int < 12 -%}
-          deb [arch=amd64,arm64] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main
+          {%- if ansible_facts.distribution_major_version | int < 12 -%}
+          deb [arch=amd64,arm64] https://apt.releases.hashicorp.com {{ ansible_facts.distribution_release }} main
           {%- else -%}
-          deb [arch=amd64,arm64 signed-by=/etc/apt/trusted.gpg.d/hashicorp.gpg] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main
+          deb [arch=amd64,arm64 signed-by=/etc/apt/trusted.gpg.d/hashicorp.gpg] https://apt.releases.hashicorp.com {{ ansible_facts.distribution_release }} main
           {%- endif -%}
         state: present
       become: yes
