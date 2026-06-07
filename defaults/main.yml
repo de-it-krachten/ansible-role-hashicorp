@@ -4,10 +4,10 @@
 hashicorp_product: "{{ role_name | regex_replace('deitkrachten\\.') }}"
 
 # product platform
-hashicorp_platform: "{{ ansible_system | lower }}"
+hashicorp_platform: "{{ ansible_facts.system | lower }}"
 
 # product architecture
-hashicorp_arch: "{{ 'amd64' if ansible_architecture == 'x86_64' else ansible_architecture }}"
+hashicorp_arch: "{{ 'amd64' if ansible_facts.architecture == 'x86_64' else ansible_facts.architecture }}"
 
 # product install mode (binary or package)
 hashicorp_install_mode: package
