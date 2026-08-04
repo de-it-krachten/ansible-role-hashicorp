@@ -3,19 +3,20 @@
 - name: Converge
   hosts: all
   tasks:
-    - name: Include role 'ansible-role-hashicorp' (package)
-      include_role:
-        name: ansible-role-hashicorp
-      vars:
-        hashicorp_product: "{{ item }}"
-      loop:
-        - terraform
-        - vagrant
-        - terraform
-        - packer
-        - consul
-        - vault
-        - nomad
+
+#    - name: Include role 'ansible-role-hashicorp' (package)
+#      include_role:
+#        name: ansible-role-hashicorp
+#      vars:
+#        hashicorp_product: "{{ item }}"
+#      loop:
+#        - terraform
+#        - vagrant
+#        - terraform
+#        - packer
+#        - consul
+#        - vault
+#        - nomad
 
     - name: Include role 'ansible-role-hashicorp' (binary)
       include_role:

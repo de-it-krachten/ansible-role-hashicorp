@@ -72,19 +72,6 @@ hashicorp_product_url: >-
 - name: sample playbook for role 'hashicorp'
   hosts: all
   tasks:
-    - name: Include role 'hashicorp' (package)
-      include_role:
-        name: hashicorp
-      vars:
-        hashicorp_product: '{{ item }}'
-      loop:
-        - terraform
-        - vagrant
-        - terraform
-        - packer
-        - consul
-        - vault
-        - nomad
     - name: Include role 'hashicorp' (binary)
       include_role:
         name: hashicorp
