@@ -1,3 +1,18 @@
+# [1.7.0](https://github.com/de-it-krachten/ansible-role-hashicorp/compare/v1.6.0...v1.7.0) (2026-08-05)
+
+
+### Bug Fixes
+
+* Fix deprecation warnings ([426af7f](https://github.com/de-it-krachten/ansible-role-hashicorp/commit/426af7fe2f7398de651ec529b2af59b0e213965d))
+
+
+### Features
+
+* Add support for ansible-core 2.20+ ([4208688](https://github.com/de-it-krachten/ansible-role-hashicorp/commit/420868827bce1dc932bcf27b32a217b65b530994))
+* Added support for Fedora 44 ([0f00873](https://github.com/de-it-krachten/ansible-role-hashicorp/commit/0f008738c1e712519fdcf64d08768b12a6b0f6fb))
+* Added support for Ubuntu 26.04 LTS ([604d076](https://github.com/de-it-krachten/ansible-role-hashicorp/commit/604d076ef3edf3ea88166cc53728883437750631))
+* Drop support for Fedora 42 ([07e5b44](https://github.com/de-it-krachten/ansible-role-hashicorp/commit/07e5b44db2baacc95394b2e43aeb4c4749c82fcc))
+
 # [1.6.0](https://github.com/de-it-krachten/ansible-role-hashicorp/compare/v1.5.0...v1.6.0) (2026-03-15)
 
 
