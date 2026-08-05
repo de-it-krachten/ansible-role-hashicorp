@@ -31,8 +31,9 @@ Supported platforms
 - Debian 12 (Bookworm)
 - Ubuntu 22.04 LTS
 - Ubuntu 24.04 LTS
-- Fedora 42
+- Ubuntu 26.04 LTS
 - Fedora 43
+- Fedora 44<sup>1</sup>
 
 Note:
 <sup>1</sup> : no automated testing is performed on these platforms
@@ -45,10 +46,10 @@ Note:
 hashicorp_product: "{{ role_name | regex_replace('deitkrachten\\.') }}"
 
 # product platform
-hashicorp_platform: "{{ ansible_system | lower }}"
+hashicorp_platform: "{{ ansible_facts.system | lower }}"
 
 # product architecture
-hashicorp_arch: "{{ 'amd64' if ansible_architecture == 'x86_64' else ansible_architecture }}"
+hashicorp_arch: "{{ 'amd64' if ansible_facts.architecture == 'x86_64' else ansible_facts.architecture }}"
 
 # product install mode (binary or package)
 hashicorp_install_mode: package
@@ -71,19 +72,6 @@ hashicorp_product_url: >-
 - name: sample playbook for role 'hashicorp'
   hosts: all
   tasks:
-    - name: Include role 'hashicorp' (package)
-      include_role:
-        name: hashicorp
-      vars:
-        hashicorp_product: '{{ item }}'
-      loop:
-        - terraform
-        - vagrant
-        - terraform
-        - packer
-        - consul
-        - vault
-        - nomad
     - name: Include role 'hashicorp' (binary)
       include_role:
         name: hashicorp

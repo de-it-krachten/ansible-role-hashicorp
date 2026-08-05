@@ -2,11 +2,11 @@
 
 - name: Use specific version {{ hashicorp_product }}
   ansible.builtin.set_fact:
-    hashicorp_product_version: "{{ vars[hashicorp_product + '_version'] }}"
-  when: vars[hashicorp_product + '_version'] is defined
+    hashicorp_product_version: >-
+      {{ lookup('vars', hashicorp_product + '_version', default='') }}
 
 - name: Get version
-  when: vars[hashicorp_product + '_version'] is not defined
+  when: hashicorp_product_version | length == 0
   block:
 
     - name: Get latest release of a public repository
@@ -63,4 +63,3 @@
     path: "{{ __tmpdir.path }}"
     state: absent
   changed_when: false
-
