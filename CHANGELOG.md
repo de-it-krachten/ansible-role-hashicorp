@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/de-it-krachten/ansible-role-hashicorp/compare/v1.7.0...v1.8.0) (2026-10-13)
+
+
+### Features
+
+* Drop support for Debian 11 (Bullseye) ([3b4314b](https://github.com/de-it-krachten/ansible-role-hashicorp/commit/3b4314b6d3127919c87cd3dc83ff17b2a4f00504))
+
 # [1.7.0](https://github.com/de-it-krachten/ansible-role-hashicorp/compare/v1.6.0...v1.7.0) (2026-08-05)
 
 
